@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UTP +evalua · Sistema de Evaluación Docente</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E11D48'/%3E%3Cpath d='M32 16v32M16 32h32' stroke='white' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="description" content="UTP +evalua: sistema de evaluación docente con vista de estudiante y panel de administración.">
+<meta name="theme-color" content="#E11D48">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--r:#E11D48;--g:#10B981;--h:#8E9BB3;--bg:#EFF4F5;--ink:#1E2340;--mut:#8792A9;--ln:#E6EBF0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,system-ui,sans-serif;background:#DDE3EA;color:var(--ink);min-height:100vh;padding-top:env(safe-area-inset-top)}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea{font:inherit;color:inherit}
+.fab{position:fixed;bottom:16px;right:16px;z-index:50;background:#1E2340;color:#fff;border-radius:99px;padding:8px 13px;font-size:11.5px;font-weight:600;display:flex;gap:6px;align-items:center;box-shadow:0 4px 14px #0003;opacity:.92}
+.fab:hover{opacity:1;background:var(--r)}
+#stu{display:flex;justify-content:center;padding:24px 0}
+#phone{width:390px;height:min(844px,calc(100vh - 48px));min-height:640px;background:var(--bg);border-radius:38px;box-shadow:0 20px 60px #1e234040;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.sb{height:44px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:6px 28px 0;font-weight:700;font-size:15px;position:relative;z-index:2}
+#scr{flex:1;overflow-y:auto;scrollbar-width:none}
+#scr::-webkit-scrollbar{display:none}
+.hd{background:var(--h);color:#fff;padding:14px 20px 16px;display:flex;gap:12px;align-items:center}
+.hd h1{font-size:20px;font-weight:700}
+.hd p{font-size:12px;opacity:.75;margin-top:2px}
+.bk{width:34px;height:34px;border-radius:50%;background:#ffffff33;display:grid;place-items:center;flex:none}
+.pad{padding:16px 18px 24px}
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 16px #1e234010}
+.ban{background:var(--r);color:#fff;border-radius:18px;padding:16px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 20px #e11d4840}
+.ban h2{font-size:16px;font-weight:700}.ban p{font-size:11.5px;opacity:.85;margin-top:3px;line-height:1.35}
+.wb{background:#fff;color:var(--r);font-weight:700;font-size:12px;padding:9px 14px;border-radius:9px;flex:none}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.st small{font-size:12px;font-weight:600;color:#4A5472;display:flex;justify-content:space-between;align-items:center}
+.st b{font-size:36px;font-weight:800;display:block;margin:6px 0 4px;line-height:1.1}
+.st span{font-size:11px;color:var(--mut)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--r)}
+.rw{display:flex;justify-content:space-between;align-items:center}
+.rw h3{font-size:15px;font-weight:700;color:var(--h)}.rw p{font-size:11.5px;color:var(--mut);margin-top:2px}
+.rw b{font-size:26px;font-weight:800;color:var(--h);display:flex;gap:6px;align-items:center}
+.steps h3{font-size:14px;font-weight:700;color:var(--h);margin-bottom:12px}
+.steps div{display:flex;gap:10px;font-size:13px;color:#5A6580;margin-bottom:11px;line-height:1.4}
+.steps i{flex:none;width:20px;height:20px;border-radius:50%;background:#EEF1F5;color:var(--r);font:700 11px Inter;display:grid;place-items:center;font-style:normal}
+#nav{height:78px;flex:none;background:#fff;border-top:1px solid var(--ln);display:flex;padding:10px 6px 0;position:relative}
+#nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:var(--mut);height:44px}
+#nav button.on{color:var(--r);font-weight:700}
+#phone:after{content:"";position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:9px;background:#111;z-index:5;pointer-events:none}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{flex:1;padding:9px 4px;border-radius:99px;background:#fff;border:1px solid var(--ln);font-size:12.5px;font-weight:500;color:#4A5472}
+.tabs button.on{background:var(--r);color:#fff;border-color:var(--r);font-weight:700}
+.sv{margin-bottom:12px}
+.tg{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.tg i{font:600 10px Inter;padding:3px 8px;border-radius:6px;background:#EEF1F5;color:#4A5472;font-style:normal}
+.tg i.t{background:#FDE7EC;color:var(--r)}
+.tg u{margin-left:auto;text-decoration:none;color:var(--r);font-size:11px;font-weight:600;display:flex;gap:4px;align-items:center}
+.sv h3{font-size:17px;font-weight:700;color:var(--h)}.sv p{font-size:12.5px;color:#4A5472;margin-top:2px}
+.sv .ft{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ln);margin-top:12px;padding-top:12px;font-size:11.5px;color:var(--mut)}
+.rb{background:var(--r);color:#fff;font-weight:700;font-size:13px;padding:9px 20px;border-radius:9px}
+.ok{color:var(--g)!important;font-weight:700;font-size:12px}
+.pg{padding:14px 18px 6px}
+.pg .rw{font-size:12px;font-weight:700;color:#4A5472;margin-bottom:7px}.pg .rw b{font-size:12px;color:var(--r)}
+.bar{height:7px;background:#E3E8ED;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--r);border-radius:9px;transition:width .4s}
+.sec{background:var(--h);color:#fff;border-radius:14px;padding:13px 16px;display:flex;gap:10px;align-items:center;font-weight:700;font-size:14px;margin:12px 18px}
+.q{margin-bottom:18px}.q h4{font-size:14px;font-weight:600;color:#4A5472;margin-bottom:10px}
+.stars{display:flex;gap:6px}.stars button{padding:2px}
+textarea{width:100%;height:150px;border:1px solid var(--ln);background:#F4F6F8;border-radius:14px;padding:14px;font-size:14px;line-height:1.55;resize:none;outline:none;color:#8792A9}
+textarea:focus{border-color:var(--r)}
+.cn{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut);margin:8px 2px 14px}.cn b{color:var(--r)}
+.tgl{display:flex;gap:10px;align-items:center}.tgl div{flex:1}.tgl b{font-size:13px;color:#4A5472;display:block}.tgl span{font-size:11px;color:var(--mut)}
+.sw{width:50px;height:28px;border-radius:99px;background:#CBD2DC;position:relative;transition:.2s;flex:none}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--g)}.sw.on:after{left:25px}
+.ft2{display:flex;gap:12px;padding:12px 18px 26px;background:var(--bg);border-top:1px solid var(--ln)}
+.ft2 button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:14px}
+.b1{background:#fff;border:1px solid var(--ln);color:#4A5472}.b2{background:var(--r);color:#fff}
+.sm{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;color:#4A5472;border-bottom:1px solid var(--ln)}.sm b{color:var(--ink)}
+.cbox{display:flex;flex-direction:column;height:100%}
+.tag{background:#E7F8F0;color:var(--g);font:700 11px Inter;padding:3px 10px;border-radius:7px}
+.cat{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;color:#4A5472;margin-bottom:13px}
+.cat span{width:96px;flex:none}.cat .bar{flex:1;height:10px}.cat em{font:600 12px Inter;color:var(--mut);width:24px;text-align:right}
+.toast{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;padding:10px 16px;border-radius:99px;z-index:9;white-space:nowrap;animation:tt 2.4s forwards}
+@keyframes tt{0%,85%{opacity:1}100%{opacity:0}}
+/* login */
+.lg{display:inline-flex;gap:3px;vertical-align:middle}.lg i{background:#000;color:#fff;width:30px;height:30px;font:800 22px Inter;display:grid;place-items:center;font-style:normal;border-radius:2px}
+.logo{font:800 30px Inter;letter-spacing:-1.2px;display:flex;align-items:center;gap:2px;justify-content:center}.logo s{text-decoration:none;color:var(--r);font-size:34px}
+.lt{height:230px;display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center;font-size:12px;color:#4A5472}
+.lf{background:#fff;border-radius:28px 28px 0 0;margin-top:-26px;padding:26px 22px 14px;position:relative;min-height:calc(100% - 204px)}
+.lf h2{color:var(--r);font-size:17px;font-weight:700;margin-bottom:16px}
+.lf label{display:block;font-size:12.5px;font-weight:600;color:#4A5472;margin-bottom:7px}
+.inp{display:flex;align-items:center;gap:10px;border:1px solid var(--ln);border-radius:12px;padding:0 14px;height:46px;margin-bottom:16px;color:var(--mut)}
+.inp input{flex:1;border:0;outline:0;background:none;font-size:14px;min-width:0}
+.inp:focus-within{border-color:var(--r)}
+.opt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:16px;color:var(--mut);align-items:center}.opt label{display:flex;gap:8px;align-items:center;margin:0;font-weight:400}
+.opt input{accent-color:var(--r);width:16px;height:16px}.opt a{color:var(--r);font-weight:700;cursor:pointer}
+.lb{width:100%;background:var(--r);color:#fff;font-weight:700;font-size:14px;padding:14px;border-radius:12px;box-shadow:0 8px 18px #e11d4838}
+.pv{background:#F0F4F5;border-radius:10px;padding:12px;display:flex;gap:10px;font-size:11px;color:var(--mut);margin:16px 0;line-height:1.35}
+.cp{text-align:center;font-size:11px;color:#5A6580;background:#EAEEF9;padding:18px;margin:0 -22px -14px}
+/* admin */
+#adm{display:none;min-height:100vh;padding-top:0}
+.ad{display:grid;grid-template-columns:225px 1fr;min-height:100vh}
+.sd{background:var(--h);padding:0 12px 20px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.sd .lgo{margin:0 -12px 18px;height:56px;background:#fff;padding-left:14px;display:flex;align-items:center;gap:2px;font-weight:800;font-size:19px;letter-spacing:-.6px;color:#000}
+.sd .lgo .lg i{width:18px;height:18px;font-size:13px;background:#000}
+.sd button{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:9px;font-size:13px;font-weight:600;color:#fff;text-align:left}
+.sd button.on{background:var(--r)}
+.sd .ad2{margin-top:auto;font-size:12px;color:#fff;display:flex;gap:10px;align-items:center;padding:10px}.av{width:30px;height:30px;border-radius:50%;background:#2D3350;display:grid;place-items:center;font-weight:700;font-size:11px;color:#fff;flex:none}
+.mn{padding:0 24px 24px;background:#F0F1F5;min-width:0}
+.tb{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:12px;flex-wrap:wrap}
+.tb h1{font-size:19px;font-weight:800}
+.tb .r{display:flex;gap:14px;align-items:center;font-size:12px;font-weight:600}
+.sr{background:#E7E9EF;border-radius:99px;padding:9px 16px;font-size:12px;color:var(--mut);width:200px;border:0;outline:0}
+.pc{background:#fff;border-radius:14px;padding:18px;border:1px solid #E7E9EF}
+.k4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.k4 small{font-size:11px;color:#4A5472;display:flex;justify-content:space-between;align-items:center}
+.k4 b{font-size:22px;font-weight:800;display:block;margin:8px 0 4px}.k4 span{font-size:10px;color:var(--g);font-weight:700}
+.ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center}
+.g3{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;margin-bottom:16px}
+.pc h3{font-size:14px;font-weight:700}.pc>p{font-size:10.5px;color:var(--mut);margin:2px 0 14px}
+.fb{display:flex;align-items:flex-end;gap:16px;height:210px;padding-top:26px}
+.fb div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10px;color:#4A5472;gap:7px;cursor:pointer}
+.fb i{width:100%;border-radius:5px 5px 0 0;display:block;transition:.2s;position:relative;min-height:8px}
+.fb i:hover{filter:brightness(1.1)}
+.fb em{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font:700 10px Inter;padding:3px 7px;border-radius:5px;font-style:normal}
+.td{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #EEF0F4;font-size:11.5px;cursor:pointer;width:100%;text-align:left}
+.td:hover{background:#FAFAFC}.td b{font-size:11px;display:block}.td span{font-size:9.5px;color:var(--mut)}
+.td .n{font:700 10px Inter;width:18px;color:#4A5472}.td .pill{margin-left:auto;background:#FDE7EC;color:var(--r);font:700 10px Inter;padding:4px 8px;border-radius:6px}
+.lc{position:relative}.lc svg{width:100%;height:170px;display:block}
+.lc .tip{position:absolute;background:var(--ink);color:#fff;font:700 10px Inter;padding:4px 8px;border-radius:5px;transform:translate(-50%,-135%);pointer-events:none;opacity:0;white-space:nowrap}
+.dt{display:grid;grid-template-columns:1.9fr 1fr;gap:16px}
+.dc{display:flex;flex-direction:column;gap:16px}
+.hdr{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.ph{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#8E9BB3,#2D3350);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+.hdr h2{font-size:15px;font-weight:800;display:flex;gap:8px;align-items:center}.hdr h2 u{text-decoration:none;font:600 9px Inter;background:#E7F8F0;color:var(--g);padding:3px 8px;border-radius:5px}
+.hdr p{font-size:10.5px;color:var(--mut);margin-top:3px}
+.hdr .sc{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700}
+.rd{display:flex;align-items:center;gap:20px}
+.cm{background:#F0F1F5;border-radius:9px;padding:12px;font-size:11.5px;margin-bottom:10px;line-height:1.5;color:#2D3350}
+.cm small{display:flex;justify-content:space-between;font-size:9.5px;color:var(--mut);margin-bottom:4px}
+.cm small u{text-decoration:none;font-weight:700;padding:2px 8px;border-radius:5px;background:#E7F8F0;color:var(--g)}
+.cm small u.n{background:#FEF3C7;color:#D97706}
+.dk{background:var(--ink);color:#fff;display:flex;flex-direction:column;gap:10px}
+.dk h3{font-size:12px}
+.dk button{padding:11px;border-radius:9px;font-weight:700;font-size:12px;color:#fff;border:1px solid #fff5}.dk .p{background:var(--r);border-color:var(--r)}
+.hi{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:9px}.hi span{color:var(--r)}.hi small{color:var(--mut);font-weight:500;margin-left:6px}
+.crs{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:10px;align-items:center}.crs small{display:block;color:var(--mut);font-weight:500;font-size:10px}
+.ph2{padding:80px 0;text-align:center;color:var(--mut);font-size:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.chips button{padding:6px 13px;border-radius:99px;background:#EEF0F4;font-size:11.5px;font-weight:600;color:#4A5472}.chips button.on{background:var(--r);color:#fff}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}.tbl th{text-align:left;font-size:10.5px;color:var(--mut);padding:8px 6px;border-bottom:1px solid #EEF0F4}.tbl td{padding:11px 6px;border-bottom:1px solid #EEF0F4;vertical-align:middle}
+.sm2{padding:6px 12px!important;font-size:11px!important}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btnrow{display:flex;gap:8px;margin-top:14px}.btnrow button{padding:8px 14px;border-radius:9px;font-size:11.5px;font-weight:700;border:1px solid #E1E4EA}.btnrow .p{background:var(--r);color:#fff;border-color:var(--r)}
+.pc2{display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid #EEF0F4}.pc2 div{flex:1}.pc2 b{display:block;font-size:13px}.pc2 span{font-size:11px;color:var(--mut)}
+.in{border:1px solid #E1E4EA;border-radius:9px;padding:9px 12px;font-size:13px;width:120px;outline:0}
+.hint{font-size:10.5px;color:var(--mut);text-align:center;line-height:1.5;margin-top:12px}
+/* pulido */
+:root{--mut:#6B7690}
+body{background:linear-gradient(160deg,#E6EBF2,#D5DCE6) fixed;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"tnum" 1}
+::selection{background:#E11D4833}
+button,a{transition:background-color .18s,color .18s,filter .18s,transform .12s,box-shadow .18s,opacity .18s}
+button:active{transform:scale(.97)}
+:focus-visible{outline:2px solid var(--r);outline-offset:2px}
+.sd button:focus-visible,.hd .bk:focus-visible{outline-color:#fff}
+.inp input:focus-visible,textarea:focus-visible{outline:0}
+.inp:focus-within,textarea:focus{box-shadow:0 0 0 3px #e11d4818}
+textarea{color:#4A5472}
+.rb:hover,.lb:hover,.b2:hover,.dk .p:hover,.btnrow .p:hover{filter:brightness(1.07)}
+.wb:hover{background:#FFF1F4}
+.b1:hover,.btnrow button:not(.p):hover,.chips button:not(.on):hover,.tabs button:not(.on):hover{filter:brightness(.96)}
+.sd button:not(.on):hover{background:#ffffff26}
+.td:hover{border-radius:8px}
+.tbl tr:hover td{background:#FAFBFC}
+.pc{box-shadow:0 1px 2px #1e23400d}
+.sv{transition:box-shadow .2s,transform .2s}.sv:hover{transform:translateY(-2px);box-shadow:0 10px 24px #1e234018}
+.stars svg{transition:transform .15s}.stars button:hover svg{transform:scale(1.15)}
+#nav button.on:before{content:"";position:absolute;top:-10px;left:50%;width:24px;height:3px;border-radius:0 0 4px 4px;background:var(--r);transform:translateX(-50%)}
+.hd{position:sticky;top:0;z-index:3;box-shadow:0 2px 12px #1e234026}
+#scr{overscroll-behavior:contain}
+#scr>*{animation:fi .28s ease backwards}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}}
+#phone{box-shadow:0 0 0 9px #11142A,0 0 0 10px #3A4166,0 34px 70px #1e234059}
+.sb:before{content:"";position:absolute;left:50%;top:10px;width:96px;height:26px;border-radius:14px;background:#0B0D1E;transform:translateX(-50%)}
+.toast{box-shadow:0 6px 18px #0003}
+.td span,.cm small,.crs small,.hdr h2 u{font-size:10.5px}
+.td b,.hdr p,.k4 span,.pc>p,.fb div{font-size:11.5px}
+.cm,.hi,.crs,.tbl{font-size:12.5px}.tbl th{font-size:11px}
+@media(max-width:430px){.sb:before{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:900px){.ad{grid-template-columns:1fr}.sd{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px}.sd .lgo,.sd .ad2{display:none}.k4{grid-template-columns:1fr 1fr}.g3,.dt,.gr2{grid-template-columns:1fr}.tb{padding-top:20px}}
+@media(max-width:430px){#stu{padding:0}.fab{bottom:92px;right:10px}#phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}
+@media print{.fab,.sd,.tb{display:none}.ad{display:block}}
+</style>
+</head>
+<body>
+<button class="fab" id="fab" onclick="mode(cur==1?2:1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"></path></svg>Vista admin</button>
+<div id="stu" style="display: flex;"><div id="phone" style="background: radial-gradient(circle at 30% 4%, rgb(240, 211, 217) 0px, transparent 38%) rgb(234, 238, 249);"><div class="sb"><span>9:41</span><span id="sig"><svg width="64" height="12" viewBox="0 0 64 12"><g fill="#111"><rect x="0" y="7" width="3" height="4" rx="1"></rect><rect x="5" y="5" width="3" height="6" rx="1"></rect><rect x="10" y="3" width="3" height="8" rx="1"></rect><rect x="15" y="1" width="3" height="10" rx="1"></rect></g><path d="M25 4a8 8 0 0111 0M27.5 6.6a5 5 0 016 0M30.5 9.2a1 1 0 012 0" stroke="#111" stroke-width="1.6" fill="none" stroke-linecap="round"></path><rect x="42" y="1" width="19" height="10" rx="3" fill="none" stroke="#111" opacity=".5"></rect><rect x="43.5" y="2.5" width="16" height="7" rx="2" fill="#111"></rect></svg></span></div><div id="scr"></div><div id="nav" style="display: none;"></div></div></div>
+<div id="adm" style="display: none;"></div>
+
+<script>
+const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',doc:'M6 2h9l5 5v15H6zM14 2v6h6M9 13h8M9 17h8',trend:'M3 17l6-6 4 4 8-8M15 7h6v6',user:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0',lock:'M5 11h14v10H5zM8 11V7a4 4 0 018 0v4',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',check:'M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z',clock:'M12 7v5l3 2M12 3a9 9 0 100 18 9 9 0 000-18z',chat:'M21 12a8 8 0 01-11.5 7L4 20l1-4.5A8 8 0 1121 12z',back:'M15 5l-7 7 7 7',book:'M5 3h14v18H5zM9 17h6',star:'M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z',grid:'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',bars:'M5 20V10M12 20V4M19 20v-7',cog:'M12 15a3 3 0 100-6 3 3 0 000 6zM19 12l2-1-2-4-2 1-2-1-1-2H9L8 8 6 7 4 11l2 1v2l-2 1 2 4 2-1 2 1 1 2h4l1-2 2-1 2 1 2-4-2-1z',bell:'M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8zM10 21h4',up:'M3 17l6-6 4 4 8-8M15 7h6v6',share:'M12 3v12M7 8l5-5 5 5M5 14v7h14v-7',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5'};
+const ic=(n,s=20,c='currentColor',f='none')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${f}" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${P[n]}"/></svg>`;
+const $=id=>document.getElementById(id);
+$('sig').innerHTML='<svg width="64" height="12" viewBox="0 0 64 12"><g fill="#111"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="8" rx="1"/><rect x="15" y="1" width="3" height="10" rx="1"/></g><path d="M25 4a8 8 0 0111 0M27.5 6.6a5 5 0 016 0M30.5 9.2a1 1 0 012 0" stroke="#111" stroke-width="1.6" fill="none" stroke-linecap="round"/><rect x="42" y="1" width="19" height="10" rx="3" fill="none" stroke="#111" opacity=".5"/><rect x="43.5" y="2.5" width="16" height="7" rx="2" fill="#111"/></svg>';
+
+/* ====== DATOS ====== */
+const courses=[
+{id:'MAT-203',ty:'Teoría',n:'Cálculo II',d:'Dra. María García',v:'15 de Abril',p:1},
+{id:'PROG-101',ty:'Laboratorio',n:'Programación I',d:'MSc. Roberto Diaz',v:'18 de Abril',p:1},
+{id:'FIS-102',ty:'Teoría',n:'Física General',d:'Dr. Juan Flores',v:'20 de Abril',p:1},
+{id:'ALG-110',ty:'Teoría',n:'Álgebra Lineal',d:'Dr. Pedro Salas',v:'',p:0},
+{id:'COM-100',ty:'Teoría',n:'Comunicación Efectiva',d:'Mg. Lucía Rojas',v:'',p:0},
+{id:'RN-120',ty:'Teoría',n:'Realidad Nacional',d:'Mg. Carlos Vega',v:'',p:0},
+{id:'ING-101',ty:'Teoría',n:'Inglés I',d:'Lic. Ana Paredes',v:'',p:0},
+{id:'GP-130',ty:'Laboratorio',n:'Gestión de Proyectos',d:'Ing. Marco Díaz',v:'',p:0}];
+const secs=[
+{t:'Dominio del Curso',qs:['Dominio de los temas del curso','Conocimiento actualizado de la materia']},
+{t:'Claridad de las Explicaciones',qs:['Explica los temas de forma clara','Resuelve las dudas durante la clase']},
+{t:'Metodología Utilizada',qs:['Metodología aplicada en clase','Uso de recursos y materiales','Puntualidad y cumplimiento del sílabo']},
+{t:'Comentarios Adicionales'},{t:'Confirmación de Envío'}];
+const SAMPLE='Excelente docente, siempre absuelve dudas de manera clara y utiliza recursos prácticos en Canvas. Me gustaría que incluya más ejercicios resueltos en las diapositivas de clase.';
+const CFG={per:true,anon:true,mail:true,ciclo:'2026-I'};
+const S={scr:'login',tab:'home',f:'pend',c:null,sec:1,rate:{},cm:'',an:true,when:''};
+const ST=(n,k)=>[1,2,3,4,5].map(i=>`<button onclick="rate('${k}',${i})" aria-label="${i} estrellas">${ic('star',30,i<=n?'#F5B301':'#CBD2DC',i<=n?'#F5B301':'none')}</button>`).join('');
+
+/* ====== ESTUDIANTE ====== */
+function toast(t){document.querySelectorAll('.toast').forEach(e=>e.remove());const e=document.createElement('div');e.className='toast';e.textContent=t;$('phone').appendChild(e);setTimeout(()=>e.remove(),2400)}
+function go(s,t){S.scr=s;if(t)S.tab=t;draw()}
+const pend=()=>courses.filter(c=>c.p).length;
+function draw(){
+const nv=['home','enc','res','perf'].includes(S.scr);
+$('nav').style.display=nv?'flex':'none';
+if(nv)$('nav').innerHTML=[['home','Inicio','home'],['enc','Encuestas','doc'],['res','Resultados','trend'],['perf','Perfil','user']].map(a=>`<button class="${S.scr==a[0]?'on':''}" onclick="go('${a[0]}')">${ic(a[2],22)}${a[1]}</button>`).join('');
+$('scr').innerHTML=V[S.scr]();$('scr').scrollTop=0;
+$('phone').style.background=S.scr=='login'?'radial-gradient(circle at 30% 4%,#F0D3D9 0,transparent 38%) #EAEEF9':'';
+}
+const hd=(t,s,b)=>`<div class="hd">${b?`<button class="bk" onclick="go('${b}')">${ic('back',18,'#fff')}</button>`:''}<div><h1>${t}</h1><p>${s}</p></div></div>`;
+const V={
+login:()=>`<div class="lt"><div class="logo"><span class="lg"><i>U</i><i>T</i><i>P</i></span><s>+</s>evalua</div>Sistema de Evaluación Docente</div>
+<div class="lf"><h2>Iniciar sesión</h2><label for="cod">Código de estudiante</label><div class="inp">${ic('user',18)}<input id="cod" placeholder="U21304562" autocomplete="username" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key=='Enter')$('pw').focus()"></div>
+<label for="pw">Contraseña</label><div class="inp">${ic('lock',18)}<input id="pw" type="password" placeholder="••••••••••••" autocomplete="current-password" onkeydown="if(event.key=='Enter')login()"><button type="button" aria-label="Mostrar u ocultar contraseña" onclick="const p=$('pw');p.type=p.type=='password'?'text':'password'">${ic('eye',18)}</button></div>
+<div class="opt"><label><input type="checkbox" checked>Recordarme</label><a onclick="toast('Te enviamos un enlace a tu correo UTP')">¿Olvidó su contraseña?</a></div>
+<button class="lb" onclick="login()">Ingresar al Sistema</button><p class="hint">Demo estudiante: U21304562 / utp2026<br>Demo admin: ADMIN / admin2026</p>
+<div class="pv">${ic('shield',16,'#E11D48')}<span>Tu participación es confidencial y las opiniones ingresadas son procesadas de manera anónima.</span></div>
+<div class="cp">© 2026 Universidad Tecnológica del Perú</div></div>`,
+home:()=>`${hd('¡Hola, Mateo!','Ciclo Activo: '+CFG.ciclo+' • Código: '+(S.code||'U21304562'))}<div class="pad">
+<div class="ban"><div><h2>Evaluación Docente Activa</h2><p>Tu opinión ayuda a mejorar la calidad de enseñanza. Completa tus encuestas hoy.</p></div><button class="wb" onclick="goEval()">Ir ahora</button></div>
+<div class="g2"><div class="card st"><small>Pendientes<i class="dot"></i></small><b style="color:var(--r)">${pend()}</b><span>Encuestas pendientes</span></div>
+<div class="card st"><small>Completadas${ic('check',18,'#10B981')}</small><b style="color:var(--g)">${courses.length-pend()}</b><span>Encuestas enviadas</span></div></div>
+<div class="card rw" style="margin-bottom:14px"><div><h3>Cursos Registrados</h3><p>Cursos con docentes asignados</p></div><b>${courses.length} ${ic('book',20)}</b></div>
+<div class="card steps"><h3>Pasos para la evaluación</h3><div><i>1</i>Selecciona un curso de la lista de pendientes.</div><div><i>2</i>Califica con estrellas y añade tus comentarios sinceros.</div><div><i>3</i>Confirma el envío. Tu evaluación se procesará de forma anónima.</div></div></div>`,
+enc:()=>{const l=courses.filter(c=>S.f=='all'||(S.f=='pend')==!!c.p);const T=(k,n,c)=>`<button class="${S.f==k?'on':''}" onclick="S.f='${k}';draw()">${n} (${c})</button>`;
+return `${hd('Evaluaciones Docentes','Selecciona una encuesta pendiente para iniciar')}<div class="pad" style="padding-top:14px"><div class="tabs">${T('all','Todas',courses.length)}${T('pend','Pendientes',pend())}${T('done','Completas',courses.length-pend())}</div>
+${l.map(c=>`<div class="card sv"><div class="tg"><i>${c.id}</i><i class="t">${c.ty}</i>${c.p?`<u>${ic('clock',13,'#E11D48')}Vence: ${c.v}</u>`:`<u class="ok" style="color:var(--g)">${ic('check',13,'#10B981')}Enviada</u>`}</div><h3>${c.n}</h3><p>${c.d}</p><div class="ft"><span>Estimado: 5 min</span>${c.p?`<button class="rb" onclick="start('${c.id}')">Evaluar</button>`:`<span class="ok">Completada</span>`}</div></div>`).join('')||'<p style="text-align:center;color:var(--mut);padding:40px 0;font-size:13px">No hay encuestas en esta categoría.</p>'}</div>`},
+quiz:()=>{const c=courses.find(x=>x.id==S.c),n=S.sec,s=secs[n-1];let b='';
+if(n<4)b=s.qs.map((q,i)=>{const k=n+'-'+i;return `<div class="q"><h4>${q}</h4><div class="stars">${ST(S.rate[k]||0,k)}</div></div>`}).join('');
+if(n==4)b=`<div class="q"><h4>¿Tiene algún comentario o sugerencia para mejorar el curso?</h4></div><textarea id="tx" maxlength="500" placeholder="Excelente docente, siempre absuelve dudas de manera clara y utiliza recursos prácticos en Canvas. Me gustaría que incluya más ejercicios resueltos en las diapositivas de clase." oninput="S.cm=this.value;$('cc').textContent=this.value.length+' / 500'">${S.cm}</textarea><div class="cn"><span>Evite usar lenguaje ofensivo.</span><b id="cc">${S.cm.length} / 500</b></div>
+<div class="tgl">${ic('shield',20,'#10B981')}<div><b>Comentario Anónimo</b><span>Se ocultará tu identidad en los comentarios.</span></div><button class="sw ${S.an?'on':''}" onclick="if(CFG.anon)return toast('El anonimato es obligatorio');S.an=!S.an;this.classList.toggle('on')" aria-label="Anónimo"></button></div>`;
+if(n==5){const all=[].concat(...secs.slice(0,3).map((s,i)=>s.qs.map((q,j)=>[q,S.rate[(i+1)+'-'+j]||0])));b=all.map(a=>`<div class="sm"><span>${a[0]}</span><b style="color:#F5B301">${'★'.repeat(a[1])}<span style="color:#CBD2DC">${'★'.repeat(5-a[1])}</span></b></div>`).join('')+`<div class="sm"><span>Comentario</span><b>${S.cm?S.cm.slice(0,22)+(S.cm.length>22?'…':''):'—'}</b></div><div class="sm"><span>Modo anónimo</span><b>${S.an?'Activado':'Desactivado'}</b></div>`}
+return `<div class="cbox">${hd(c.n,'Evaluando a: '+c.d,'enc')}<div class="pg"><div class="rw"><span>Progreso general</span><b>${n} de 5 secciones</b></div><div class="bar"><i style="width:${n*20}%"></i></div></div>
+<div class="sec">${ic(n==5?'check':'chat',20,'#fff')}Sección ${n}: ${s.t}</div><div class="card" style="margin:0 18px;flex:1;overflow:auto;max-height:420px">${b}</div><div style="flex:1"></div>
+<div class="ft2"><button class="b1" onclick="${n==1?"go('enc')":'nav2(-1)'}">Anterior</button><button class="b2" onclick="nav2(1)">${n==5?'Enviar':'Siguiente'}</button></div></div>`},
+ok:()=>{const c=courses.find(x=>x.id==S.c);return `<div class="cbox" style="padding:0 20px 28px"><div style="flex:1;display:flex;flex-direction:column;align-items:center;padding-top:36px;text-align:center">
+<svg width="224" height="224" viewBox="0 0 224 224"><circle cx="112" cy="112" r="102" fill="#fff" stroke="#6DD400" stroke-width="20"/><ellipse cx="78" cy="118" rx="20" ry="8" fill="#BCC3D6"/><ellipse cx="146" cy="118" rx="20" ry="8" fill="#BCC3D6"/><path d="M76 94q10-14 20 0M128 94q10-14 20 0" stroke="#1E2340" stroke-width="7" fill="none" stroke-linecap="round"/><ellipse cx="112" cy="138" rx="28" ry="20" fill="#1E2340"/><ellipse cx="112" cy="146" rx="17" ry="10" fill="#BCC3D6"/></svg>
+<h1 style="font-size:24px;font-weight:800;margin-top:34px">¡Evaluación Enviada!</h1><p style="font-size:13.5px;color:#5A6580;margin:8px 0 28px">La encuesta ha sido procesada de manera segura.</p>
+<div class="card" style="width:100%;text-align:left;padding:20px"><small style="font-weight:700;color:var(--mut);font-size:11px">RESUMEN DE ENVÍO</small><div style="margin-top:12px;font-size:13px;color:#5A6580;display:grid;gap:11px"><div class="rw"><span>Curso:</span><b style="color:var(--ink)">${c.n} (${c.id})</b></div><div class="rw"><span>Docente:</span><b style="color:var(--ink)">${c.d}</b></div><div class="rw"><span>Fecha y hora:</span><b style="color:var(--ink)">${S.when}</b></div><div class="rw"><span>Modo anónimo:</span><span class="tag">${S.an?'Activado':'Desactivado'}</span></div></div>
+<div style="border-top:1px solid var(--ln);margin-top:14px;padding-top:14px;display:flex;gap:10px;font-size:11px;color:var(--mut);line-height:1.4">${ic('shield',18,'#E11D48')}<span>Tus respuestas se han anonimizado. Tu código de estudiante no se vinculará a las calificaciones entregadas al docente.</span></div></div></div>
+<button class="lb" onclick="go('home','home')" style="padding:16px">Volver al Inicio</button></div>`},
+res:()=>`${hd('Programación I','Resultados agregados: Prof. Roberto Diaz','home')}<div class="pad"><div class="card" style="display:flex;gap:18px;align-items:center;margin-bottom:16px">${donut(4.2,98,12,'#8792A9','/ 5.0',26)}<div><h3 style="font-size:13px;color:var(--h);font-weight:700">Desempeño general</h3><p style="font-size:11.5px;color:#5A6580;margin:5px 0 8px;line-height:1.35">Calificación promedio basada en la encuesta actual.</p><span class="tag" style="display:inline-flex;gap:5px;align-items:center">${ic('user',12,'#10B981')}78% participación</span></div></div>
+<div class="card" style="margin-bottom:16px"><h3 style="font-size:14px;color:var(--h);margin-bottom:16px">Resultados por Categoría</h3>${[['Metodología',4.5],['Puntualidad',4.0],['Comunicación',4.3],['Evaluación',3.8],['Recursos',4.4]].map(a=>`<div class="cat"><span>${a[0]}</span><div class="bar"><i style="width:${a[1]*20}%"></i></div><em>${a[1].toFixed(1)}</em></div>`).join('')}</div>
+<div class="card rw"><div><h3 style="font-size:14px">Tendencia del Semestre</h3><p>Comparado con ciclos anteriores</p></div><b style="font-size:13px;color:var(--g)">${ic('up',16,'#10B981')}&nbsp;+4.8%</b></div></div>`,
+perf:()=>`${hd('Mi Perfil','Estudiante UTP')}<div class="pad"><div class="card" style="text-align:center"><div class="ph" style="margin:0 auto 10px;width:72px;height:72px;font-size:26px">M</div><h3 style="font-size:17px">Mateo</h3><p style="font-size:12px;color:var(--mut);margin:4px 0 16px">Código: ${S.code||'U21304562'} · Ciclo 2026-I</p><button class="lb" onclick="S.code='';go('login')">Cerrar sesión</button></div></div>`
+};
+function donut(v,sz,sw,tc,sub,fs){const r=(sz-sw)/2,C=2*Math.PI*r;return `<div style="position:relative;width:${sz}px;height:${sz}px;flex:none"><svg width="${sz}" height="${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#E3E8ED" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#E11D48" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C*v/5} ${C}"/></svg><div style="position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:${tc}"><b style="font-size:${fs}px;line-height:1">${v}</b><small style="font-size:9px">${sub}</small></div></div>`}
+function login(){const c=$('cod').value.trim().toUpperCase(),p=$('pw').value;if(!c||!p)return toast('Ingresa tu código y contraseña');
+if(c=='ADMIN'&&p=='admin2026'){go('home','home');return mode(2)}
+if(c!='U21304562'||p!='utp2026')return toast('Código o contraseña incorrectos');S.code=c;go('home','home')}
+function goEval(){if(!CFG.per){toast('Fuera del periodo de evaluación');return go('res')}S.f='pend';go('enc')}
+function start(id){if(!CFG.per){toast('Fuera del periodo de evaluación');return go('res')}S.c=id;S.sec=1;S.rate={};S.cm=SAMPLE;S.an=true;go('quiz')}
+function rate(k,v){S.rate[k]=v;const d=document.querySelectorAll('.q')[+k.split('-')[1]];d.querySelector('.stars').innerHTML=ST(v,k)}
+function nav2(d){const n=S.sec;if(d>0&&n<4&&secs[n-1].qs.some((q,i)=>!S.rate[n+'-'+i]))return toast('Califica todos los criterios');
+if(d>0&&n==5){const D=new Date(),p=x=>String(x).padStart(2,'0'),h=D.getHours();S.when=`${p(D.getDate())}/${p(D.getMonth()+1)}/${D.getFullYear()} ${p(h%12||12)}:${p(D.getMinutes())} ${h<12?'AM':'PM'}`;courses.find(x=>x.id==S.c).p=0;return go('ok')}
+S.sec+=d;draw()}
+
+/* ====== ADMIN ====== */
+const fac=[['Ingeniería',4.3,'#E11D48'],['Ciencias',4.1,'#3B82F6'],['Humanidades',4.4,'#10B981'],['Negocios',3.9,'#F59E0B'],['Derecho',4.2,'#1A1F36'],['Arquitectura',4.5,'#8B5CF6']];
+const docs=[['María García','Ingeniería',4.8,1,[4.8,4.5,4.2,4.0,4.6]],['Luis Mendoza','Ciencias',4.7,1,[4.6,4.7,4.8,4.5,4.9]],['Ana Torres','Derecho',4.6,0,[4.5,4.6,4.4,4.8,4.7]],['Carlos Ruiz','Negocios',4.6,1,[4.7,4.4,4.6,4.5,4.8]],['Elena Beltrán','Arquitectura',4.5,0,[4.4,4.6,4.5,4.3,4.7]],['Roberto Diaz','Ingeniería',4.2,1,[4.5,4.0,4.3,3.8,4.4]],['Lucía Rojas','Humanidades',4.4,1,[4.3,4.5,4.4,4.2,4.5]],['Juan Flores','Ciencias',4.0,0,[4.1,4.0,3.9,3.8,4.1]],['Carlos Vega','Humanidades',4.3,1,[4.2,4.4,4.3,4.1,4.5]],['Marco Díaz','Negocios',3.8,0,[3.9,3.8,3.7,3.6,4.0]]];
+const tops=docs.slice(0,5).map(d=>[d[0],d[1],d[2].toFixed(1),d[3]]);
+const ENC=[['MAT-203','Cálculo II','María García',182,230,1],['PROG-101','Programación I','Roberto Diaz',156,200,1],['FIS-102','Física General','Juan Flores',98,160,1],['DER-210','Derecho Civil','Ana Torres',120,140,0],['NEG-150','Marketing','Carlos Ruiz',88,120,1],['ARQ-120','Diseño Básico','Elena Beltrán',64,90,0]];
+const hist=[4.1,4.3,4.2,4.4,4.3],hl=['2024-I (4.1)','2024-II (4.3)','2025-I (4.2)','2025-II (4.4)','2026-I (4.3)'];
+let A={p:'dash',d:0,q:'',fac:''};
+const nav=[['dash','Dashboard','grid'],['list','Docentes','user'],['enc','Encuestas','doc'],['rep','Reportes','bars'],['cfg','Configuración','cog']];
+const ap=()=>A.p=='det'?'list':A.p,esc=x=>x.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const side=()=>`<aside class="sd"><div class="lgo"><span class="lg"><i>U</i><i>T</i><i>P</i></span><span style="color:#E11D48;font-size:22px">+</span>evalua</div>${nav.map(a=>`<button class="${ap()==a[0]?'on':''}" onclick="A.p='${a[0]}';A.q='';A.fac='';adm()">${ic(a[2],16,'#fff')}${a[1]}</button>`).join('')}<button class="ad2" onclick="mode(1)" title="Volver a la app del estudiante"><span class="av">AU</span>Admin UTP</button></aside>`;
+const tbar=t=>`<div class="tb"><h1>${t}</h1><div class="r"><input id="sq" class="sr" aria-label="Buscar" placeholder="Buscar docente, facultad..." value="${esc(A.q)}" oninput="srch(this.value)"><button aria-label="Notificaciones" style="width:30px;height:30px;border-radius:50%;background:#E7E9EF;display:grid;place-items:center" onclick="toast2('Sin notificaciones nuevas')">${ic('bell',15,'#E11D48')}</button><span style="display:flex;gap:7px;align-items:center"><span class="av" style="background:#E11D48;width:22px;height:22px;font-size:8px">PE</span>UTP Lima Centro</span></div></div>`;
+function srch(v){A.q=v;A.p='list';adm();const e=$('sq');e.focus();e.setSelectionRange(v.length,v.length)}
+function csv(k){const r=k=='fac'?[['Facultad','Promedio'],...fac.map(f=>[f[0],f[1]])]:[['Docente','Facultad','Puntaje','Metodologia','Comunicacion','Puntualidad','Evaluacion','Recursos'],...docs.map(d=>[d[0],d[1],d[2],...d[4]])];
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+r.map(x=>x.join(',')).join('\n')],{type:'text/csv'}));a.download='reporte_'+k+'.csv';a.click();toast2('Reporte descargado')}
+function line(){const W=600,H=150,xs=i=>40+i*(W-80)/4,ys=v=>H-20-(v-3.9)/0.7*100;const pts=hist.map((v,i)=>[xs(i),ys(v)]);
+return `<div class="lc"><svg viewBox="0 0 ${W} ${H+20}" preserveAspectRatio="none">${[0,1,2].map(i=>`<line x1="0" x2="${W}" y1="${30+i*45}" y2="${30+i*45}" stroke="#EEF0F4"/>`).join('')}<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#F43F5E" stroke-width="2"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#E11D48" onmouseenter="tip(this,${i})" style="cursor:pointer" />`).join('')}</svg><div class="tip" id="tp"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:#4A5472;padding:0 20px">${hl.map(l=>`<span>${l}</span>`).join('')}</div>`}
+function tip(e,i){const t=$('tp'),b=e.getBoundingClientRect(),p=t.parentNode.getBoundingClientRect();t.textContent=hl[i].split(' ')[0]+': '+hist[i]+'/5.0';t.style.left=b.left-p.left+3+'px';t.style.top=b.top-p.top+'px';t.style.opacity=1}
+function radar(v){const c=60,r=48,pt=(i,k)=>{const a=-Math.PI/2+i*2*Math.PI/5;return[(c+Math.cos(a)*r*k).toFixed(1),(c+Math.sin(a)*r*k).toFixed(1)].join(',')};
+return `<svg width="120" height="120">${[1,.66,.33].map(k=>`<polygon points="${[0,1,2,3,4].map(i=>pt(i,k)).join(' ')}" fill="none" stroke="#E3E8ED"/>`).join('')}<polygon points="${v.map((x,i)=>pt(i,x/5)).join(' ')}" fill="#3B82F61a" stroke="#3B82F6" stroke-width="1.5"/></svg>`}
+function adm(){const a=$('adm');let m='';
+if(A.p=='dash')m=`${tbar('Panel de Control General')}
+<div class="k4">${[['Total Encuestas','1,284','+12.4%','doc','#E11D48','#FDE7EC'],['Tasa de Respuesta','78.5%','+3.2%','check','#3B82F6','#E0ECFF'],['Promedio General','4.2 / 5.0','+0.4%','star','#10B981','#E0F7EE'],['Docentes Evaluados','156','100%','user','#4A5472','#E7E9EF']].map(k=>`<div class="pc"><small>${k[0]}<span class="ic" style="background:${k[5]}">${ic(k[3],14,k[4])}</span></small><b>${k[1]}</b><span>↑ ${k[2]} <span style="color:var(--mut);font-weight:500">${k[2]=='100%'?'':'este semestre'}</span></span></div>`).join('')}</div>
+<div class="g3"><div class="pc"><h3>Evaluación por Facultad</h3><p>Promedio obtenido en las encuestas de este ciclo · toca una barra para ver sus docentes</p><div class="fb">${fac.map(f=>`<div onclick="A.fac='${f[0]}';A.p='list';adm()"><i style="height:${f[1]/4.6*100}%;background:${f[2]}"><em>${f[1]}</em></i>${f[0]}</div>`).join('')}</div></div>
+<div class="pc"><div class="rw"><h3>Top Docentes Destacados</h3>${ic('star',16,'#F59E0B')}</div><p>Docentes con mejor desempeño acumulado</p>${tops.map((t,i)=>`<button class="td" onclick="A.p='det';A.d=${i};adm()"><span class="n">#${i+1}</span><div><b>Prof. ${t[0]}</b><span>${t[1]}</span></div><span class="pill">${t[2]}/5.0</span><span style="color:${t[3]?'#10B981':'#E11D48'};font-weight:700">${t[3]?'↑':'↓'}</span></button>`).join('')}</div></div>
+<div class="pc"><div class="rw"><div><h3>Tendencia Semestral (Histórico)</h3><p>Evolución del puntaje docente promedio durante los últimos ciclos</p></div><span style="font-size:10px;color:#4A5472;display:flex;gap:5px;align-items:center"><i class="dot" style="width:7px;height:7px"></i>Promedio General</span></div>${line()}</div>`;
+else if(A.p=='list'){const q=A.q.toLowerCase(),L=docs.map((d,i)=>[d,i]).filter(x=>(!A.fac||x[0][1]==A.fac)&&(x[0][0]+' '+x[0][1]).toLowerCase().includes(q));
+m=`${tbar('Docentes')}<div class="pc"><div class="chips">${['',...fac.map(f=>f[0])].map(f=>`<button class="${A.fac==f?'on':''}" onclick="A.fac='${f}';adm()">${f||'Todas'}</button>`).join('')}</div><div style="overflow-x:auto"><table class="tbl"><tr><th>Docente</th><th>Facultad</th><th>Puntaje</th><th>Tendencia</th><th></th></tr>${L.map(x=>`<tr><td><b>Prof. ${x[0][0]}</b></td><td>${x[0][1]}</td><td><span class="pill" style="background:#FDE7EC;color:var(--r);font:700 10px Inter;padding:4px 8px;border-radius:6px">${x[0][2].toFixed(1)}/5.0</span></td><td style="color:${x[0][3]?'#10B981':'#E11D48'};font-weight:700">${x[0][3]?'↑ Sube':'↓ Baja'}</td><td><button class="rb sm2" onclick="A.p='det';A.d=${x[1]};adm()">Ver ficha</button></td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:30px">Sin resultados para tu búsqueda.</td></tr>'}</table></div></div>`}
+else if(A.p=='det'){const d=docs[A.d],h=d[2],cr=['Metodología','Comunicación','Puntualidad','Evaluación','Recursos'].map((n,i)=>[n,d[4][i]]);
+m=`${tbar('Evaluación Detallada')}<div style="font-size:10px;color:var(--mut);margin:-6px 0 14px"><a style="cursor:pointer" onclick="A.p='dash';adm()">Dashboard</a> &gt; <a style="cursor:pointer" onclick="A.p='list';adm()">Docentes</a> &gt; <span style="color:var(--r);font-weight:600">Prof. ${d[0]}</span></div>
+<div class="pc hdr"><div class="ph">${d[0].split(' ').map(x=>x[0]).join('')}</div><div><h2>Prof. ${d[0]}<u>Contratado D.U.</u></h2><p>Departamento de ${d[1]}<br>ID Docente: U2015${String(48+A.d*13).padStart(4,'0')} | Código de docente ordinario</p></div><div class="sc">${donut(h,54,6,'#1E2340','de 5.0',14)}<span>Puntaje General<br><small style="color:var(--mut);font-weight:500">Rango ${h>=4.5?'Sobresaliente':h>=4?'Destacado':'En desarrollo'}</small></span></div></div>
+<div class="dt"><div class="dc"><div class="pc"><h3 style="margin-bottom:16px">Evaluación por Criterio Pedagógico</h3><div class="rd">${radar(cr.map(c=>c[1]))}<div style="flex:1">${cr.map(c=>`<div style="margin-bottom:11px"><div class="rw" style="font-size:11px;font-weight:700;margin-bottom:4px"><span>${c[0]}</span><span style="color:var(--r)">${c[1].toFixed(1)}</span></div><div class="bar" style="height:5px"><i style="width:${c[1]*20}%"></i></div></div>`).join('')}</div></div></div>
+<div class="pc"><h3 style="margin-bottom:12px">Comentarios Anónimos de Estudiantes</h3>${[['Positivo','Excelente metodología de enseñanza. Explica de forma clara y siempre absuelve las dudas durante la clase práctica.'],['Neutral','Es muy puntual y cumple a cabalidad con el sílabo, sin embargo, las evaluaciones son bastante complejas.'],['Positivo','Gran manejo de las herramientas virtuales y recursos interactivos de aprendizaje. Hace dinámicas las clases remotas.']].map((c,i)=>`<div class="cm"><small>Estudiante #0${i+1}<u class="${c[0]=='Neutral'?'n':''}">${c[0]}</u></small>"${c[1]}"</div>`).join('')}</div></div>
+<div class="dc"><div class="pc dk"><h3>Acciones del Reporte</h3><button class="p" onclick="window.print()">Exportar Reporte PDF</button><button onclick="toast2('Reporte compartido con el docente')">Compartir con Docente</button></div>
+<div class="pc"><h3 style="margin-bottom:12px">Desempeño Histórico</h3>${[['2025-II',h,'Top 10%'],['2025-I',h-.1,'Top 12%'],['2024-II',h-.3,'Top 20%']].map(x=>`<div class="hi"><b>${x[0]}</b><span>${x[1].toFixed(1)} / 5.0<small>${x[2]}</small></span></div>`).join('')}</div>
+<div class="pc"><h3 style="margin-bottom:12px">Cursos Dictados este Ciclo</h3>${[['Cálculo II','SIS-102','42','#10B981'],['Programación I','SIS-204','38','#10B981'],['Algoritmos','SIS-301','35','#9CA3AF']].map(c=>`<div class="crs"><div>${c[0]}<small>${c[1]}</small></div><small>${c[2]} Alumn. <i class="dot" style="display:inline-block;width:6px;height:6px;background:${c[3]}"></i></small></div>`).join('')}</div></div></div>`}
+else if(A.p=='enc'){const T=ENC.reduce((x,e)=>x+e[3],0),N=ENC.reduce((x,e)=>x+e[4],0);
+m=`${tbar('Encuestas')}<div class="k4" style="grid-template-columns:repeat(3,1fr)">${[['Respuestas recibidas',T],['Respuestas esperadas',N],['Tasa de respuesta',(T/N*100).toFixed(1)+'%']].map(k=>`<div class="pc"><small>${k[0]}</small><b>${k[1]}</b></div>`).join('')}</div>
+<div class="pc"><div class="rw" style="margin-bottom:12px"><h3>Encuestas del ciclo ${CFG.ciclo}</h3><button class="rb sm2" onclick="toast2('Encuesta nueva guardada como borrador')">+ Nueva encuesta</button></div><div style="overflow-x:auto"><table class="tbl"><tr><th>Curso</th><th>Docente</th><th>Participación</th><th>Estado</th><th></th></tr>${ENC.map((e,i)=>`<tr><td><b>${e[1]}</b><br><span style="color:var(--mut);font-size:10.5px">${e[0]}</span></td><td>${e[2]}</td><td style="min-width:150px"><div class="bar"><i style="width:${e[3]/e[4]*100}%"></i></div><span style="font-size:10.5px;color:var(--mut)">${e[3]}/${e[4]} (${(e[3]/e[4]*100).toFixed(0)}%)</span></td><td><span class="tag" style="${e[5]?'':'background:#EEF0F4;color:#8792A9'}">${e[5]?'Activa':'Cerrada'}</span></td><td><button class="rb sm2" style="${e[5]?'background:#1E2340':''}" onclick="ENC[${i}][5]=!ENC[${i}][5];adm()">${e[5]?'Cerrar':'Abrir'}</button></td></tr>`).join('')}</table></div></div>`}
+else if(A.p=='rep')m=`${tbar('Reportes')}<div class="gr2">${[['Ranking de docentes','Puntaje general y por criterio de los 10 docentes evaluados.','csv','doc'],['Promedio por facultad','Comparativo de las 6 facultades en el ciclo actual.','csv','fac'],['Reporte semestral general','Resumen institucional con indicadores y tendencia histórica.','pdf',''],['Comentarios anónimos','Opiniones de estudiantes clasificadas por sentimiento.','pdf','']].map(r=>`<div class="pc"><h3>${r[0]}</h3><p style="margin:6px 0 0">${r[1]}</p><div class="btnrow"><button class="p" onclick="window.print()">Exportar PDF</button>${r[2]=='csv'?`<button onclick="csv('${r[3]}')">Descargar CSV</button>`:''}</div></div>`).join('')}</div>`;
+else{const T=(k,t,d)=>`<div class="pc2"><div><b>${t}</b><span>${d}</span></div><button class="sw ${CFG[k]?'on':''}" onclick="CFG.${k}=!CFG.${k};adm()" aria-label="${t}"></button></div>`;
+m=`${tbar('Configuración')}<div class="pc" style="max-width:640px">${T('per','Periodo de evaluación habilitado','Si está cerrado, los estudiantes son dirigidos al panel de resultados.')}${T('anon','Anonimato obligatorio','Los estudiantes no pueden desactivar el modo anónimo.')}${T('mail','Recordatorios por correo','Avisa a los estudiantes con encuestas pendientes.')}<div class="pc2" style="border:0"><div><b>Ciclo activo</b><span>Se muestra en el inicio del estudiante.</span></div><input class="in" value="${esc(CFG.ciclo)}" onchange="CFG.ciclo=this.value.trim()||'2026-I';toast2('Ciclo actualizado')"></div></div>`}
+a.innerHTML=`<div class="ad">${side()}<main class="mn">${m}</main></div>`;const c3=a.querySelectorAll(".lc circle")[3];c3&&tip(c3,3)}
+function toast2(t){const e=document.createElement('div');e.className='toast';e.style.cssText='position:fixed;bottom:60px';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2400)}
+let cur=1;function mode(n){cur=n;$('stu').style.display=n==1?'flex':'none';$('adm').style.display=n==2?'block':'none';$('fab').innerHTML=n==1?ic('grid',14)+'Vista admin':ic('user',14)+'Vista estudiante';if(n==2)adm();scrollTo(0,0)}
+draw();mode(1);
+</script>
+
+
+</body></html>
